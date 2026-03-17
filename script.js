@@ -1,70 +1,78 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-// ข้อมูลของคุณ
+// REPLACE WITH YOUR FIREBASE CONFIG
 const firebaseConfig = {
-    apiKey: "AIzaSyAmbzRxqYFti6IEksy2WunKCVa_v8Gg0F0",
-    authDomain: "market-digital-3d10e.firebaseapp.com",
-    projectId: "market-digital-3d10e",
-    storageBucket: "market-digital-3d10e.firebasestorage.app",
-    messagingSenderId: "368580098929",
-    appId: "1:368580098929:web:7e005211ceb83b3b9794d0",
-    measurementId: "G-Q985QSMDDT"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_ID",
+    appId: "YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
-// จัดการ Modal
-const modal = document.getElementById("auth-modal");
-const loginBtn = document.getElementById("login-nav-btn");
-const closeBtn = document.getElementsByClassName("close")[0];
-
-loginBtn.onclick = () => modal.style.display = "block";
-closeBtn.onclick = () => modal.style.display = "none";
-
-// ระบบ Login / Signup
-document.getElementById("auth-submit-btn").onclick = async () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    try {
-        // ในตัวอย่างนี้ทำเป็น Login อย่างเดียว (สามารถเพิ่ม logic สมัครสมาชิกได้)
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        alert("เข้าสู่ระบบสำเร็จ!");
-        modal.style.display = "none";
-    } catch (error) {
-        alert("เกิดข้อผิดพลาด: " + error.message);
-    }
-};
-
-// ฟังก์ชันดึงสินค้าแยกตามหมวดหมู่ (คณะ)
-async function loadProducts(category = null) {
-    const productList = document.getElementById("product-list");
-    productList.innerHTML = "กำลังโหลด...";
-    
-    let q = collection(db, "products");
-    if (category) {
-        q = query(collection(db, "products"), where("faculty", "==", category));
-    }
-
-    const querySnapshot = await getDocs(q);
-    productList.innerHTML = "";
-    
-    querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        productList.innerHTML += `
-            <div class="product-card">
-                <h3>${data.name}</h3>
-                <p>ราคา: ${data.price} บาท</p>
-                <small>คณะ: ${data.faculty}</small>
-                <button onclick="startChat('${data.sellerId}')">แชทกับผู้ขาย</button>
-            </div>
-        `;
-    });
+// --- LOGIC FOR INDEX PAGE (DISPLAY) ---
+const productList = document.getElementById('product-list');
+if (productList) {
+    const loadProducts = async () => {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        productList.innerHTML = ""; // Clear loader
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            productList.innerHTML += `
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card h-100 border-0 shadow-sm product-card">
+                        <img src="${data.imageUrl}" class="card-img-top" alt="Product">
+                        <div class="card-body p-2">
+                            <h6 class="mb-1 text-truncate">${data.name}</h6>
+                            <p class="fw-bold text-primary mb-0">$${data.price}</p>
+                            <small class="text-muted">${data.contact}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    };
+    loadProducts();
 }
 
-// เรียกใช้งานตอนโหลดหน้าเว็บ
-loadProducts();
+// --- LOGIC FOR ADD PRODUCT PAGE ---
+const productForm = document.getElementById('product-form');
+if (productForm) {
+    productForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Uploading...";
+
+        const file = document.getElementById('image').files[0];
+        const name = document.getElementById('name').value;
+        const description = document.getElementById('description').value;
+        const price = document.getElementById('price').value;
+        const contact = document.getElementById('contact').value;
+
+        try {
+            // 1. Upload Image to Firebase Storage
+            const storageRef = ref(storage, 'products/' + file.name);
+            const snapshot = await uploadBytes(storageRef, file);
+            const imageUrl = await getDownloadURL(snapshot.ref);
+
+            // 2. Save Product Data to Firestore
+            await addDoc(collection(db, "products"), {
+                name, description, price, contact, imageUrl, createdAt: new Date()
+            });
+
+            alert("Product posted successfully!");
+            window.location.href = "index.html";
+        } catch (error) {
+            console.error(error);
+            alert("Error uploading product.");
+            submitBtn.disabled = false;
+        }
+    });
+}
