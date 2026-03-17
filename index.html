@@ -1,48 +1,54 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniMarket - ซื้อขายของมือสอง</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Marketplace - Browse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8f9fa; padding-bottom: 70px; }
+        .product-card img { height: 180px; object-fit: cover; border-radius: 8px 8px 0 0; }
+        .fab { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">Uni<span>Market</span></div>
-        <div class="nav-links">
-            <button id="show-post-btn">ลงประกาศสินค้า</button>
-            <button id="login-nav-btn" class="primary-btn">เข้าสู่ระบบ</button>
+<nav class="navbar navbar-light bg-white border-bottom sticky-top">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1 fw-bold text-primary">DigitalMarket</span>
+        <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search"></i></button>
+    </div>
+</nav>
+
+<div class="container mt-3">
+    <div class="row g-3">
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" class="card-img-top" alt="Product">
+                <div class="card-body p-2">
+                    <h6 class="card-title mb-1 text-truncate">Premium Smartwatch</h6>
+                    <p class="card-text fw-bold text-primary mb-0">$199.00</p>
+                    <small class="text-muted">Electronics</small>
+                </div>
+            </div>
         </div>
-    </nav>
-
-    <header>
-        <h1>เลือกหมวดหมู่ตามคณะ</h1>
-        <div class="category-grid">
-            <button class="cat-card" data-cat="engineering">วิศวกรรมศาสตร์</button>
-            <button class="cat-card" data-cat="arts">ศิลปศาสตร์</button>
-            <button class="cat-card" data-cat="science">วิทยาศาสตร์</button>
-            <button class="cat-card" data-cat="business">บริหารธุรกิจ</button>
-        </div>
-    </header>
-
-    <main id="product-list">
-        </main>
-
-    <div id="auth-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="form-container">
-                <h2 id="auth-title">เข้าสู่ระบบ</h2>
-                <input type="email" id="email" placeholder="อีเมลนักศึกษา">
-                <input type="password" id="password" placeholder="รหัสผ่าน">
-                <button id="auth-submit-btn" class="main-btn">ตกลง</button>
-                <p id="toggle-auth">ยังไม่มีบัญชี? <span>สมัครสมาชิก</span></p>
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" class="card-img-top" alt="Product">
+                <div class="card-body p-2">
+                    <h6 class="card-title mb-1 text-truncate">Noise Cancelling Headphones</h6>
+                    <p class="card-text fw-bold text-primary mb-0">$250.00</p>
+                    <small class="text-muted">Audio</small>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script type="module" src="script.js"></script>
+<a href="add-product.html" class="btn btn-primary fab d-flex align-items-center justify-content-center">
+    <i class="bi bi-plus-lg fs-3"></i>
+</a>
+
 </body>
 </html>
