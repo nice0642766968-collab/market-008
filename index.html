@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniMarket - ซื้อขายของมือสอง</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Uni<span>Market</span></div>
+        <div class="nav-links">
+            <button id="show-post-btn">ลงประกาศสินค้า</button>
+            <button id="login-nav-btn" class="primary-btn">เข้าสู่ระบบ</button>
+        </div>
+    </nav>
+
+    <header>
+        <h1>เลือกหมวดหมู่ตามคณะ</h1>
+        <div class="category-grid">
+            <button class="cat-card" data-cat="engineering">วิศวกรรมศาสตร์</button>
+            <button class="cat-card" data-cat="arts">ศิลปศาสตร์</button>
+            <button class="cat-card" data-cat="science">วิทยาศาสตร์</button>
+            <button class="cat-card" data-cat="business">บริหารธุรกิจ</button>
+        </div>
+    </header>
+
+    <main id="product-list">
+        </main>
+
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="form-container">
+                <h2 id="auth-title">เข้าสู่ระบบ</h2>
+                <input type="email" id="email" placeholder="อีเมลนักศึกษา">
+                <input type="password" id="password" placeholder="รหัสผ่าน">
+                <button id="auth-submit-btn" class="main-btn">ตกลง</button>
+                <p id="toggle-auth">ยังไม่มีบัญชี? <span>สมัครสมาชิก</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
